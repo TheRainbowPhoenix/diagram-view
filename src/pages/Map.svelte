@@ -71,7 +71,7 @@
     scene.add(ico);
 
     ico.scale.set(1.1, 0.9, 1.1);
-    ico.position.set(0, -3, 0);
+    ico.position.set(1, 1, 0.05);
 
     // Plane
     const planeGeo = new THREE.PlaneGeometry(100, 100);
@@ -85,6 +85,7 @@
     scene.add(plane);
 
     const light = new THREE.PointLight(0xff1177, 2, 20, 5);
+    light.position.set(0, 0, 8);
     scene.add(light);
 
     // Animate
@@ -97,6 +98,9 @@
       lastElapsedTime = elapsedTime;
 
       //   light.position.y = ico.position.y;
+      //   ico.position.y = (ico.position.y + 0.05) % 10;
+      ico.rotation.x += 0.005;
+      ico.rotation.y += 0.005;
 
       //Update controls
       //   controls.update();
