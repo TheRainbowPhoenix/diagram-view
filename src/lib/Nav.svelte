@@ -1,0 +1,130 @@
+<script>
+  import { Link, Router, navigate } from "svelte-routing";
+
+  import { fade, scale, slide } from "svelte/transition";
+  import { cubicInOut, elasticOut } from "svelte/easing";
+
+  export let visible = false;
+
+  import { routes } from "../router/routes";
+</script>
+
+<nav aria-label="Main">
+  <div class="navbar">
+    <div class="items">
+      <div class="toggle-wrapper">
+        <label>
+          <input
+            type="checkbox"
+            class="toggle"
+            id="menu"
+            bind:checked={visible}
+          />
+          ☰
+        </label>
+      </div>
+
+      {#if visible}
+        <div
+          class="wrapper"
+          transition:slide={{ duration: 750, delay: 100, easing: cubicInOut }}
+        >
+          <Router>
+            {#each routes as route}
+              <Link
+                class="link"
+                to={route.url}
+                on:click={() => {
+                  navigate(route.url) /* , (visible = false)*/;
+                }}
+              >
+                {route.name}
+              </Link>
+            {/each}
+          </Router>
+        </div>
+      {/if}
+    </div>
+  </div>
+</nav>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  nav {
+    display: flex;
+    height: 56px;
+
+    padding: 0;
+    backdrop-filter: blur(12px);
+    border-style: solid;
+    border-width: 0 0 1px;
+    z-index: 400;
+    border-color: rgb(48, 48, 48);
+
+    position: sticky;
+    top: 0;
+  }
+
+  .navbar {
+    /* max-width: 1419px; */
+    padding: 8px 16px 8px 16px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .items {
+    display: flex;
+    flex: 1 1 0%;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .wrapper {
+    display: flex;
+    flex: 1 1 0%;
+    gap: 24px;
+    align-items: center;
+  }
+
+  /* DELETE THIS LATER */
+
+  input#menu {
+    display: none;
+  }
+
+  label,
+  :global(nav .link) {
+    font-size: 1em;
+    cursor: pointer;
+    color: #ffffff;
+    text-decoration: none;
+    transition: 0.5s cubic-bezier(0, 0.51, 0.17, 1);
+  }
+
+  label:hover,
+  :global(nav .link:hover) {
+    color: rgb(98, 110, 223);
+    transition: 0.5s cubic-bezier(0, 0.51, 0.17, 1);
+    animation: sway 1s ease-in-out;
+  }
+
+  @keyframes sway {
+    50% {
+      transform: scale(40px);
+    }
+    /* 100% {
+        transform: translateX(-2px);
+    } */
+  }
+</style>
