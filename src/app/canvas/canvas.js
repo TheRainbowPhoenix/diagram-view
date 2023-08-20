@@ -8,6 +8,11 @@ import Camera from "../camera/camera";
 import config from "../config";
 
 export class Canvas {
+  /**
+   *
+   * @param {HTMLElement} element
+   * @param {import("../types").App} app
+   */
   constructor(element, app) {
     this.element = element;
     this.app = app;
@@ -21,7 +26,7 @@ export class Canvas {
     this.animations = [];
     // TODO ...
     this.renderFn = this.render.bind(this);
-    this.render();
+    // this.render(); // TODO: don't lock it in loop !!
     window.canvas = this;
     window.addEventListener("resize", this.onResize.bind(this), false);
   }
@@ -31,7 +36,10 @@ export class Canvas {
       antialias: true,
     });
     renderer.setClearColor(16777215, 1);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    const parentBounds = this.element.getBoundingClientRect();
+    const sizeRatio = 16 / 9;
+    renderer.setSize(parentBounds.width, parentBounds.width / sizeRatio);
+    // renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(
       window.devicePixelRatio ||
         window.screen.deviceXDPI / window.screen.logicalXDPI
@@ -52,7 +60,7 @@ export class Canvas {
     // this.pixelPlane.plane.scheduleRender();
   }
 
-  render() {
+  tick() {
     var anim, i, t, f;
     for (i = 0; i < this.animations.length; i++) {
       anim = this.animations[i];
@@ -77,6 +85,10 @@ export class Canvas {
     if (this.stopRender !== true) {
       this.renderer.render(this.scene, this.camera.getThreeObject());
     }
+  }
+
+  render() {
+    this.tick();
     requestAnimationFrame(this.renderFn);
   }
 

@@ -65,6 +65,8 @@
     z-index: 400;
     border-color: rgb(48, 48, 48);
 
+    background-color: rgba(48, 48, 48, 0.4);
+
     position: sticky;
     top: 0;
   }
@@ -95,6 +97,24 @@
     flex: 1 1 0%;
     gap: 24px;
     align-items: center;
+  }
+
+  .toggle-wrapper {
+    position: relative;
+    width: 24px;
+    display: block;
+    height: 24px;
+  }
+
+  .toggle-wrapper label {
+    width: 32px;
+    display: flex;
+    height: 32px;
+    margin-top: -4px;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    margin-left: -4px;
   }
 
   /* DELETE THIS LATER */

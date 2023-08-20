@@ -1,12 +1,17 @@
 import C from "../constants";
 
 export default class ErrorReporter {
+  /**
+   * @param {import("./http-client").default} httpClient
+   * @param {import("../types").App} app
+   */
   constructor(httpClient, app) {
     this.httpClient = httpClient;
     this.app = app;
     this.errorsSent = 0;
     window.addEventListener("error", this.onScriptError.bind(this), true);
   }
+
   onScriptError(errorEvent) {
     if (!errorEvent.message) {
       return;
@@ -21,6 +26,7 @@ export default class ErrorReporter {
       `\n            Message: ${errorEvent.message}\n            Column: ${errorEvent.colno}\n            Line: ${errorEvent.lineno}\n            StackTrace: ${stack}\n        `
     );
   }
+
   reportError(type, message) {
     this.errorsSent++;
     if (this.errorsSent > 5) {

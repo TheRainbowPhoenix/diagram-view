@@ -1,5 +1,5 @@
 export interface routeHooks {
-  routeName: string | HTMLElement;
-  routeUrl: string;
-  component: any; //not sure what svelte component is
+  name: string | HTMLElement;
+  url: string;
+  component: any; // svelte component is a mess
 }

@@ -7,6 +7,9 @@
   /** @type {HTMLCanvasElement} */
   let canvas;
 
+  /** @type {HTMLDivElement} */
+  let root;
+
   /** @type {import('../app/types').App} */
   let app;
 
@@ -15,24 +18,56 @@
     height: 600,
   };
 
+  let loading = true;
+
   onMount(async () => {
-    console.log("mounted !", canvas);
+    console.log("--- Root mounted !");
 
-    const data_rep = await fetch("/data.json");
+    // const data_rep = await fetch("/data.json");
+    // const data = await data_rep.json();
+    // const settings = data.settings || {};
 
-    const data = await data_rep.json();
-
-    const settings = data.settings || {};
-
-    console.log(settings);
+    // console.log(settings);
     // app.userSettings.setAll(settings)
-    app = mount();
+    app = mount(root);
+    console.log("--- App mounted");
+
+    await app.init();
+    console.log("--- App init OK");
+
+    loading = false;
+
+    // Animate
+    const clock = new THREE.Clock();
+    let lastElapsedTime = 0;
+
+    const tick = () => {
+      const elapsedTime = clock.getElapsedTime();
+      const deltaTime = elapsedTime - lastElapsedTime;
+      lastElapsedTime = elapsedTime;
+
+      app.tick();
+
+      // Call tick again on the next frame
+      window.requestAnimationFrame(tick);
+    };
+
+    tick();
   });
 </script>
 
-<canvas id="map" bind:this={canvas} />
+<div id="root" bind:this={root}>
+  {#if loading}
+    <p>Loading ...</p>
+  {/if}
+  <!-- <canvas id="map" bind:this={canvas} /> -->
+</div>
 
 <style>
+  #root {
+    overflow: hidden;
+  }
+
   canvas {
     border: 1px solid rgba(255, 255, 255, 0.1);
     min-width: 800px;
