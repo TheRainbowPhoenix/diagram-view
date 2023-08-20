@@ -10,7 +10,7 @@
     quartOut,
     quintOut,
   } from "svelte/easing";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
 
   /** @type {HTMLCanvasElement} */
   let canvas;
@@ -24,6 +24,9 @@
   let camera;
   /** @type {THREE.Mesh} */
   let ico;
+
+  // If the animation loop or not
+  let loop = true;
 
   const sizes = {
     width: 800,
@@ -130,10 +133,16 @@
       renderer.render(scene, camera);
 
       // Call tick again on the next frame
-      window.requestAnimationFrame(tick);
+      if (loop) {
+        window.requestAnimationFrame(tick);
+      }
     };
 
     tick();
+  });
+
+  onDestroy(() => {
+    loop = false;
   });
 </script>
 
@@ -144,6 +153,11 @@
 </div>
 
 <style>
+  #map {
+    margin-top: 2em;
+    border-radius: 22px;
+  }
+
   canvas {
     border: 1px solid rgba(255, 255, 255, 0.1);
     min-width: 800px;
@@ -154,5 +168,8 @@
     background-blend-mode: exclusion;
     background-position: 0% 100%;
     background-color: dimgray;
+
+    border-radius: 22px;
+    overflow: hidden;
   }
 </style>

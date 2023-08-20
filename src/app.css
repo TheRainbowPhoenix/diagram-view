@@ -3,9 +3,19 @@
   line-height: 1.5;
   font-weight: 400;
 
+  --accent: #795ffa;
+  --bg: #101012;
+
+  --interact: #1c1c20;
+  --interact-border: #202026;
+  --text-second: #c4c4c4;
+
+  --grid-bg: #181a1c;
+  --grid-line: #202024;
+
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: var(--bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

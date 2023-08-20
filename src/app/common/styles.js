@@ -7,9 +7,9 @@ const STYLES = {
     lineHeight: 1.1,
   },
   grid: {
-    background: "#FFF",
-    primaryLineColor: "#CCC",
-    secondaryLineColor: "#EEE",
+    background: "#030304", // "#181a1c", // #FFF //
+    primaryLineColor: "#08080A", // "#202024", // #CCC
+    secondaryLineColor: "#0C0C0E", //"#313133", // "#EEE",
   },
   selectionRectangle: {
     background: "#e6189833",

@@ -1,8 +1,9 @@
 <script>
   import * as THREE from "three";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
 
   import { mount } from "../app";
+  import ViewControls from "../app/ui/view-controls/ViewControls.svelte";
 
   /** @type {HTMLCanvasElement} */
   let canvas;
@@ -12,6 +13,8 @@
 
   /** @type {import('../app/types').App} */
   let app;
+
+  let loop = true;
 
   const sizes = {
     width: 800,
@@ -49,23 +52,43 @@
       app.tick();
 
       // Call tick again on the next frame
-      window.requestAnimationFrame(tick);
+      if (loop) {
+        window.requestAnimationFrame(tick);
+      }
     };
 
     tick();
   });
+
+  onDestroy(() => {
+    loop = false;
+    if (app) {
+      app.destroy();
+    }
+  });
 </script>
 
-<div id="root" bind:this={root}>
-  {#if loading}
-    <p>Loading ...</p>
+<div class="app-wrapper">
+  <div id="root" bind:this={root}>
+    {#if loading}
+      <p>Loading ...</p>
+    {/if}
+    <!-- <canvas id="map" bind:this={canvas} /> -->
+  </div>
+  {#if !loading}
+    <ViewControls bind:app />
   {/if}
-  <!-- <canvas id="map" bind:this={canvas} /> -->
 </div>
 
 <style>
   #root {
     overflow: hidden;
+    border-radius: 22px;
+  }
+
+  .app-wrapper {
+    margin-top: 2em;
+    position: relative;
   }
 
   canvas {

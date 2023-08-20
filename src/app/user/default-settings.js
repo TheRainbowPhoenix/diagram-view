@@ -50,7 +50,7 @@ const DEFAULTS = {
   imageRotation: 0,
   imageStretchToSize: false,
   lastActiveDocId: null,
-  genericBackgroundColor: "#FFFFFF",
+  genericBackgroundColor: "#424242", // #FFFFFF
   genericPrimaryColor: "#999999",
   genericIconColor: "#333333",
   exportDownloadAsImageSettings: {

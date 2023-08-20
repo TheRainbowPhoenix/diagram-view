@@ -60,15 +60,17 @@
 
     padding: 0;
     backdrop-filter: blur(12px);
-    border-style: solid;
-    border-width: 0 0 1px;
+    /* border-style: solid; */
+    /* border-width: 0 0 1px; */
+    /* border-color: rgb(48, 48, 48); */
     z-index: 400;
-    border-color: rgb(48, 48, 48);
 
     background-color: rgba(48, 48, 48, 0.4);
 
     position: sticky;
     top: 0;
+
+    border-radius: 22px;
   }
 
   .navbar {
@@ -134,7 +136,7 @@
 
   label:hover,
   :global(nav .link:hover) {
-    color: rgb(98, 110, 223);
+    color: var(--accent);
     transition: 0.5s cubic-bezier(0, 0.51, 0.17, 1);
     animation: sway 1s ease-in-out;
   }

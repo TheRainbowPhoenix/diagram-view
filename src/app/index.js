@@ -102,6 +102,11 @@ class App {
   renderLoop() {
     return this.canvas.render();
   }
+
+  destroy() {
+    // TODO !
+    this.canvas.stopRender = true;
+  }
 }
 
 /**

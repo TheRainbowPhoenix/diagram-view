@@ -4,18 +4,18 @@ import Map from "../pages/Map.svelte";
 
 export const routes = [
   {
-    name: "Home",
+    name: "App",
     url: "/",
+    component: App,
+  },
+  {
+    name: "Text",
+    url: "/text",
     component: Home,
   },
   {
     name: "Map",
     url: "/map",
     component: Map,
-  },
-  {
-    name: "App",
-    url: "/app",
-    component: App,
   },
 ];

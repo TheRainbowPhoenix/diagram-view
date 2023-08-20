@@ -19,4 +19,5 @@ export interface App {
   tick: () => void;
   renderLoop: () => void;
   init(): Promise<App>;
+  destroy: () => void;
 }
