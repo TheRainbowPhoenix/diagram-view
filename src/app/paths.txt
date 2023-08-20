@@ -1,0 +1,24 @@
+arc-frontend/src/js/canvas/canvas.js
+src\js\plane\grid.js
+src\js\pixel\pixel-plane.js
+src\js\plane\interaction-plane.js
+src\js\plane\abstract-plane.js
+src\js\line\area.js
+src\js\line\line-group.js
+src\js\pixel\pixel-object.js
+
+scheduleRender()
+
+src\js\line\area-renderer.js
+src\js\line\line-renderer.js
+src\js\pixel\pixel-object-renderer.js
+
+src\js\index.js
+
+
+arc-enterprise\src\auth-strategies
+arc-enterprise\src\arcentry-conf-test.yml
+
+
+const PixelObject = __webpack_require__(9); => src\js\pixel\pixel-object.js
+const AbstractPlane = __webpack_require__(13); => src\js\plane\abstract-plane.js

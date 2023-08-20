@@ -14,6 +14,8 @@
 
   /** @type {HTMLCanvasElement} */
   let canvas;
+  /** @type {HTMLDivElement} */
+  let wrapper;
   /** @type {THREE.Scene} */
   let scene;
   /** @type {THREE.WebGLRenderer} */
@@ -35,19 +37,31 @@
     // TODO: update camera and renderer
   }
 
-  onMount(() => {
+  onMount(async () => {
     console.log("mounted !", canvas);
+
+    const data_rep = await fetch("/data.json");
+
+    const data = await data_rep.json();
+
+    const settings = data.settings || {};
+
+    console.log(settings);
+    // app.userSettings.setAll(settings)
+
+    // THREE DATA
 
     const scene = new THREE.Scene();
 
     renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
+      alpha: true,
     });
 
     renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    document.body.appendChild(renderer.domElement);
+    wrapper.appendChild(renderer.domElement);
 
     // camera
     camera = new THREE.PerspectiveCamera(
@@ -82,7 +96,7 @@
     const plane = new THREE.Mesh(planeGeo, planeMat);
     plane.position.set(0, -3.5, 0);
     plane.rotation.x = -Math.PI / 2;
-    scene.add(plane);
+    // scene.add(plane);
 
     const light = new THREE.PointLight(0xff1177, 2, 20, 5);
     light.position.set(0, 0, 8);
@@ -108,6 +122,9 @@
       // Rotate the grid
       gridHelper.rotation.x += 0.005;
       gridHelper.rotation.y += 0.005;
+      // Rotate the plane
+      //   plane.rotation.x += 0.005;
+      //   plane.rotation.y += 0.005;
 
       // Render
       renderer.render(scene, camera);
@@ -122,12 +139,20 @@
 
 <svelte:window on:resize={doResize} />
 
-<canvas id="map" bind:this={canvas} />
+<div id="map" bind:this={wrapper}>
+  <canvas bind:this={canvas} />
+</div>
 
 <style>
   canvas {
     border: 1px solid rgba(255, 255, 255, 0.1);
     min-width: 800px;
     min-height: 600px;
+    mix-blend-mode: color-dodge;
+    background: var(--noise);
+    background-size: 140px, 100%, cover;
+    background-blend-mode: exclusion;
+    background-position: 0% 100%;
+    background-color: dimgray;
   }
 </style>
