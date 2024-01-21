@@ -25,7 +25,8 @@
   let loading = true;
 
   let sidebarVisible = false;
-  let sidebarFlag = false;
+  let toolbarVisible = false;
+  let repaintFlag = false;
 
   setContext("root", {
     app: () => app,
@@ -33,12 +34,17 @@
 
   const toggleSB = () => {
     sidebarVisible = !sidebarVisible;
-    sidebarFlag = true;
+    repaintFlag = true;
+  };
+
+  const toggleTB = () => {
+    toolbarVisible = !toolbarVisible;
+    repaintFlag = true;
   };
 
   afterUpdate(() => {
-    if (sidebarFlag) {
-      sidebarFlag = false;
+    if (repaintFlag) {
+      repaintFlag = false;
       app.canvas.onResize();
     }
   });
@@ -91,8 +97,11 @@
 </script>
 
 <div class="app-wrapper">
+  <div class="toolbar" class:visible={toolbarVisible}>
+    <p>TODO</p>
+  </div>
   <div class="main-space">
-    <div id="root" bind:this={root}>
+    <div id="root" bind:this={root} class:sidebarVisible class:toolbarVisible>
       {#if loading}
         <p>Loading ...</p>
         <div id="loading-overlay"></div>
@@ -102,19 +111,28 @@
     {#if !loading}
       <ViewControls />
     {/if}
-    <button class="test" on:click={toggleSB}>SB</button>
+    <button class="SB" on:click={toggleSB}>SB</button>
+    <button class="TB" on:click={toggleTB}>TB</button>
   </div>
   <div class="sidebar" class:visible={sidebarVisible}>
-    <p>TODO</p>
+    <p style="margin: 1rem;">TODO</p>
   </div>
 </div>
 
 <style>
   #root {
     overflow: hidden;
-    border-radius: 22px 22px 0 0;
+    /* border-radius: 22px 22px 0 0; */
     height: 100%;
     width: 100%;
+  }
+
+  #root.sidebarVisible {
+    border-top-right-radius: 22px;
+  }
+
+  #root.toolbarVisible {
+    border-top-left-radius: 22px;
   }
 
   .app-wrapper {
@@ -130,26 +148,45 @@
     overflow: hidden;
   }
 
-  .test {
+  .SB {
     position: absolute;
     top: 11px;
     right: 11px;
   }
 
   .sidebar {
+    border-radius: 22px 22px 0 0;
     visibility: hidden;
-    width: 0px;
     overflow: hidden;
     flex: 0 0 0px;
   }
 
   .sidebar.visible {
-    width: 250px;
     visibility: visible;
     flex: 0 0 250px;
     margin: 0 1rem;
+    background-color: #131416;
+    transition: background-color 0.2s ease-in-out;
   }
 
+  .TB {
+    position: absolute;
+    top: 11px;
+    left: 11px;
+  }
+
+  .toolbar {
+    visibility: hidden;
+    overflow: hidden;
+    flex: 0 0 0px;
+  }
+
+  .toolbar.visible {
+    visibility: visible;
+    flex: 0 0 48px;
+    margin: 0 1rem;
+  }
+  /* 
   canvas {
     border: 1px solid rgba(255, 255, 255, 0.1);
     min-width: 800px;
@@ -160,5 +197,5 @@
     background-blend-mode: exclusion;
     background-position: 0% 100%;
     background-color: dimgray;
-  }
+  } */
 </style>

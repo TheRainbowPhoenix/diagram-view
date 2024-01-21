@@ -89,6 +89,8 @@ export default class MouseProjector extends EventEmitter {
       return;
     }
     const intersection = this.getIntersection(event);
+    if (!intersection) return;
+
     this.lastEvent = event;
     this.lastRawX = intersection.x / config.gridCellSize;
     this.lastRawY = intersection.z / config.gridCellSize;
