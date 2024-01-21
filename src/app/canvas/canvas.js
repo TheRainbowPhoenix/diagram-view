@@ -6,6 +6,15 @@ import Grid from "../plane/grid";
 import Camera from "../camera/camera";
 
 import config from "../config";
+import MouseControls from "../controls/mouse-controls";
+import PixelPlane from "../pixel/pixel-plane";
+import InteractionPlane from "../plane/interaction-plane";
+import KeyboardControls from "../controls/keyboard-controls";
+import SelectionManager from "../controls/selection-manager";
+import LinePlane from "../line/line-plane";
+import MouseProjector from "../controls/mouse-projector";
+import ContinuousPan from "../controls/continuous-pan";
+import Animation from "./animation";
 
 export class Canvas {
   /**
@@ -22,13 +31,29 @@ export class Canvas {
     this.scene = new THREE.Scene();
     this.camera = new Camera(this);
     this.grid = new Grid(this);
+    this.mouseControls = new MouseControls(this);
+    this.mouseProjector = new MouseProjector(this);
+    this.continuousPan = new ContinuousPan(this);
+    this.keyboardControls = new KeyboardControls(this);
+    this.interactionPlane = new InteractionPlane(this);
+    // TODO ...
+    this.pixelPlane = new PixelPlane(this);
+    this.linePlane = new LinePlane(this);
+    // TODO ...
+    this.selectionManager = new SelectionManager(this);
     // TODO ...
     this.animations = [];
     // TODO ...
     this.renderFn = this.render.bind(this);
-    // this.render(); // TODO: don't lock it in loop !!
+    this.render(); // TODO: don't lock it in loop !!
     window.canvas = this;
     window.addEventListener("resize", this.onResize.bind(this), false);
+  }
+
+  animate(fn, frames) {
+    const animation = new Animation(fn, frames);
+    this.animations.push(animation);
+    return animation;
   }
 
   createRenderer() {
@@ -38,7 +63,7 @@ export class Canvas {
     renderer.setClearColor(16777215, 1);
     const parentBounds = this.element.getBoundingClientRect();
     const sizeRatio = 16 / 9;
-    renderer.setSize(parentBounds.width, parentBounds.width / sizeRatio);
+    renderer.setSize(parentBounds.width, parentBounds.height); // parentBounds.width / sizeRatio
     // renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(
       window.devicePixelRatio ||
@@ -47,17 +72,19 @@ export class Canvas {
     return renderer;
   }
 
+  onResize() {
+    const parentBounds = this.element.getBoundingClientRect();
+
+    this.camera.resize(parentBounds.width / parentBounds.height);
+    this.renderer.setSize(parentBounds.width, parentBounds.height);
+    this.interactionPlane.plane.scheduleRender();
+    this.pixelPlane.plane.scheduleRender();
+  }
+
   createPointLight() {
     const light = new THREE.PointLight(16777215, 0.8);
     light.position.set(0, 50, 50);
     return light;
-  }
-
-  onResize() {
-    // this.camera.resize(window.innerWidth / window.innerHeight);
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    // this.interactionPlane.plane.scheduleRender();
-    // this.pixelPlane.plane.scheduleRender();
   }
 
   tick() {

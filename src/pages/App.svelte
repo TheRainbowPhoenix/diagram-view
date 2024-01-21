@@ -1,9 +1,10 @@
 <script>
   import * as THREE from "three";
-  import { onMount, onDestroy } from "svelte";
+  import { onMount, onDestroy, setContext, tick, afterUpdate } from "svelte";
 
   import { mount } from "../app";
   import ViewControls from "../app/ui/view-controls/ViewControls.svelte";
+  import BaseViewControls from "../app/ui/view-controls/BaseViewControls.svelte";
 
   /** @type {HTMLCanvasElement} */
   let canvas;
@@ -23,8 +24,29 @@
 
   let loading = true;
 
+  let sidebarVisible = false;
+  let sidebarFlag = false;
+
+  setContext("root", {
+    app: () => app,
+  });
+
+  const toggleSB = () => {
+    sidebarVisible = !sidebarVisible;
+    sidebarFlag = true;
+  };
+
+  afterUpdate(() => {
+    if (sidebarFlag) {
+      sidebarFlag = false;
+      app.canvas.onResize();
+    }
+  });
+
   onMount(async () => {
     console.log("--- Root mounted !");
+
+    // console.log(root.getBoundingClientRect());
 
     // const data_rep = await fetch("/data.json");
     // const data = await data_rep.json();
@@ -69,26 +91,63 @@
 </script>
 
 <div class="app-wrapper">
-  <div id="root" bind:this={root}>
-    {#if loading}
-      <p>Loading ...</p>
+  <div class="main-space">
+    <div id="root" bind:this={root}>
+      {#if loading}
+        <p>Loading ...</p>
+        <div id="loading-overlay"></div>
+      {/if}
+      <!-- <canvas id="map" bind:this={canvas} /> -->
+    </div>
+    {#if !loading}
+      <ViewControls />
     {/if}
-    <!-- <canvas id="map" bind:this={canvas} /> -->
+    <button class="test" on:click={toggleSB}>SB</button>
   </div>
-  {#if !loading}
-    <ViewControls bind:app />
-  {/if}
+  <div class="sidebar" class:visible={sidebarVisible}>
+    <p>TODO</p>
+  </div>
 </div>
 
 <style>
   #root {
     overflow: hidden;
-    border-radius: 22px;
+    border-radius: 22px 22px 0 0;
+    height: 100%;
+    width: 100%;
   }
 
   .app-wrapper {
-    margin-top: 2em;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    /* margin-top: 2em; */
+  }
+
+  .main-space {
     position: relative;
+    flex: 1 1 100%;
+    overflow: hidden;
+  }
+
+  .test {
+    position: absolute;
+    top: 11px;
+    right: 11px;
+  }
+
+  .sidebar {
+    visibility: hidden;
+    width: 0px;
+    overflow: hidden;
+    flex: 0 0 0px;
+  }
+
+  .sidebar.visible {
+    width: 250px;
+    visibility: visible;
+    flex: 0 0 250px;
+    margin: 0 1rem;
   }
 
   canvas {

@@ -1,5 +1,11 @@
 import config from "../config";
 import C from "../constants";
+import AbstractPlane from "../plane/abstract-plane";
+import PixelObject from "./pixel-object";
+import PixelObjectImage from "./pixel-object-image";
+import PixelObjectLabel from "./pixel-object-label";
+import PixelObjectRenderer from "./pixel-object-renderer";
+import PixelPlaneInteractions from "./pixel-plane-interactions";
 
 export default class PixelPlane {
   constructor(canvas) {

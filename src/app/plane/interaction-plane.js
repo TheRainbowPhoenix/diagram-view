@@ -1,5 +1,7 @@
 import C from "../constants";
 import style from "../common/styles";
+import AbstractPlane from "./abstract-plane";
+import ComponentGhost from "../obj/components/ghost";
 
 export default class InteractionPlane {
   constructor(canvas) {

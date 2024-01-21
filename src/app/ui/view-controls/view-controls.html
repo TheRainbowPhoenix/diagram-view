@@ -1,0 +1,62 @@
+<div class="view-controls">
+    <div class="toggle" @click="toggleOpen" v-if="!viewControlsOnly">
+        <i class="fas fa-caret-right" v-if="isOpen"></i>
+        <i class="fas fa-caret-left" v-if="!isOpen"></i>
+    </div>
+    <span @click="createNewDocument" v-if="!viewControlsOnly">
+        <i class="fas fa-plus-square"></i>
+        <label>new document</label>
+    </span>
+    <div class="group-seperator" v-if="!viewControlsOnly"></div>
+    <i v-if="!viewControlsOnly" @click="undo" class="fas fa-reply" title="undo (ctrl + z)"></i>
+    <i v-if="!viewControlsOnly" @click="redo" class="fas fa-share" title="redo (ctrl + y)"></i>
+    <div v-if="!viewControlsOnly" class="group-seperator"></div>
+    <i @click="pan" v-if="!viewControlsOnly || isDashboardMode" class="fas fa-expand-arrows-alt has-hint"
+        title="pan canvas (space or middle mouse button)">
+        <div class="hint" :class="{show: showHint}">
+            <p>
+                You can also move the canvas by holding <b>space</b> or <b>middle mouse button /
+                    mousewheel</b>.<br />Cancel with right click.
+            </p>
+            <div class="tip"></div>
+        </div>
+    </i>
+    <i @click="zoomOut" class="fas fa-search-minus" title="zoom out (mousewheel up)"></i>
+    <i @click="zoomIn" class="fas fa-search-plus" title="zoom in (mousewheel down)"></i>
+    <i @click="rotateLeft" class="fas fa-undo-alt" title="rotate view left (Q)"></i>
+    <i @click="rotateRight" class="fas fa-redo-alt" title="rotate view right (E)"></i>
+    <span class="text" @click="toggleTopDown" title="toggle between 2D and 3D Mode (X)">
+        {{topDownLabel}}
+    </span>
+    <i @click="toggleDashboardMode" v-if="!isEmbed" class="fas fa-expand" :class="{active:isDashboardMode}"
+        title="Presentation Mode (P)"></i>
+    <div class="group-seperator" v-if="!isEmbed"></div>
+    <span v-if="!isEmbed" title="layers" @click="setContextView('${CONTEXT_VIEW.LAYERS}')"
+        :class="{active: contextView === '${CONTEXT_VIEW.LAYERS}'}">
+        <layer-control v-if="contextView === '${CONTEXT_VIEW.LAYERS}'"></layer-control>
+        <i class="fas fa-layer-group"></i>
+    </span>
+    <div class="group-seperator" v-if="!viewControlsOnly"></div>
+    <span v-if="!isEmbed" class="collab" title="collaborate with other users"
+        @click="setContextView('${CONTEXT_VIEW.COLLABORATORS}')"
+        :class="{active: contextView === '${CONTEXT_VIEW.COLLABORATORS}'}">
+        <collab-control v-if="contextView === '${CONTEXT_VIEW.COLLABORATORS}'"></collab-control>
+        <i class="fas fa-user-plus"></i>
+    </span>
+    <div class="group-seperator" v-if="isFreePlan && !viewControlsOnly"></div>
+    <div class="free-plan-count" v-if="isFreePlan && !viewControlsOnly" @click="upgradePlan"
+        @animationend="onFreeItemsExceededAnimationEnd" :class="{exceeded: showExceeded }">
+        <div class="items">{{itemsRemaining}} of ${config.itemsInFreePlan} items remaining</div>
+        <div class="label">upgrade to standard for infinite items</div>
+    </div>
+    <div class="group-seperator" v-if="!viewControlsOnly"></div>
+    <span @click="setContextView('${CONTEXT_VIEW.FEEDBACK}')" v-if="!viewControlsOnly"
+        :class="{active: contextView === '${CONTEXT_VIEW.FEEDBACK}'}">
+        <feedback-form v-if="contextView === '${CONTEXT_VIEW.FEEDBACK}'"></feedback-form>
+        <i class="far fa-comments"></i>
+    </span>
+    <div class="group-seperator" v-if="!viewControlsOnly"></div>
+    <i @click="showControlHelp" v-if="!viewControlsOnly" class="fas fa-keyboard" title="Show Hotkeys"></i>
+    <div class="group-seperator" v-if="!viewControlsOnly"></div>
+    <i @click="logout" v-if="!viewControlsOnly" class="fas fa-power-off" title="logout"></i>
+</div>

@@ -1,13 +1,58 @@
 <script lang="ts">
+  import { getContext, onMount } from "svelte";
   import type { App } from "../../types";
+  import CONSTANTS from "../../constants";
 
-  export let app: App;
+  interface AppCtx {
+    app: () => App;
+  }
+
+  const appCtx: AppCtx = getContext("root");
+
+  $: app = appCtx.app();
+
+  // const { app } = getContext("root") as {
+  //   app: () => App;
+  // };
+
+  const zoomOut = () => {
+    app.canvas.camera.changeZoomBy(-1);
+  };
+  const zoomIn = () => {
+    app.canvas.camera.changeZoomBy(1);
+  };
+  const undo = () => {
+    app.state.history.undo();
+  };
+  const redo = () => {
+    app.state.history.redo();
+  };
+
+  const redraw = () => {
+    app.canvas.onResize();
+  };
+
+  const pan = () => {
+    // if (this.$data.hintShown === false) {
+    //   this.$data.showHint = true;
+    //   this.$data.hintShown = true;
+    //   setTimeout(() => {
+    //     this.$data.showHint = false;
+    //   }, 5e3);
+    // }
+
+    app.interactionMode.set(CONSTANTS.INTERACTION_MODE.PAN_ON_DRAG);
+  };
+
+  const toggleTopDown = () => {
+    app.canvas.camera.toggleTopDown();
+  };
 </script>
 
 <div class="view-container">
   <div class="view-controls">
     <div class="toolbar">
-      <button class="toolbar" title="zoom in">
+      <button class="toolbar" title="zoom in" on:click={zoomIn}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -33,7 +78,7 @@
         >
       </button>
 
-      <button title="reset zoom">
+      <button title="reset zoom" on:click={redraw}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -52,7 +97,7 @@
         >
       </button>
 
-      <button title="zoom out">
+      <button title="zoom out" on:click={zoomOut}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -80,7 +125,7 @@
 
       <hbr />
 
-      <button title="undo">
+      <button title="undo" on:click={undo}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -101,7 +146,7 @@
         >
       </button>
 
-      <button title="redo">
+      <button title="redo" on:click={redo}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -122,7 +167,7 @@
         >
       </button>
 
-      <button title="box">
+      <button title="box" on:click={toggleTopDown}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -231,12 +276,12 @@
 
 <style>
   .view-container {
-    position: sticky;
-    right: 0;
+    position: absolute;
+    right: 11px;
     z-index: 2;
-    bottom: 0;
+    bottom: 11px;
 
-    margin-top: -86px;
+    /* margin-top: -86px; */
 
     display: flex;
     flex-direction: row;
@@ -251,7 +296,8 @@
   .ico-line {
     fill: #ffffff32;
     backdrop-filter: blur(3px);
-    box-shadow: inset -1px 0 1px rgb(255 255 255 / 6%),
+    box-shadow:
+      inset -1px 0 1px rgb(255 255 255 / 6%),
       inset 0 0 8px rgba(255, 255, 255, 0.04);
     transition: all 400ms ease;
   }
@@ -277,7 +323,7 @@
   }
 
   .toolbar button:hover {
-    background-color: rgba(255, 255, 255, 0.01);
+    background-color: rgba(255, 255, 255, 0.03);
     transition: all 400ms ease;
   }
 
@@ -289,14 +335,16 @@
     transition: all 400ms ease;
 
     border-radius: 22px;
-    background-color: rgba(255, 255, 255, 0.04);
+    background-color: rgba(28, 28, 34, 0.6);
+    /* background-color: rgba(255, 255, 255, 0.04); */
     backdrop-filter: blur(16px);
-    box-shadow: inset -1px 0 1px rgb(255 255 255 / 6%),
+    box-shadow:
+      inset -1px 0 1px rgb(255 255 255 / 6%),
       inset 0 0 8px rgba(255, 255, 255, 0.04);
 
     padding: 16px;
 
-    margin-right: -16px;
+    /* margin-right: -16px; */
     margin-bottom: 16px;
   }
 </style>

@@ -1,4 +1,5 @@
 <script>
+  import { getContext } from "svelte";
   import config from "../../config";
   import CONSTANTS from "../../constants";
 
@@ -39,6 +40,21 @@
         }
       }, 
   */
+
+  const { app } = getContext("root");
+
+  const zoomOut = () => {
+    app().canvas.camera.changeZoomBy(-1);
+  };
+  const zoomIn = () => {
+    app().canvas.camera.changeZoomBy(1);
+  };
+  const undo = () => {
+    app().state.history.undo();
+  };
+  const redo = () => {
+    app().state.history.redo();
+  };
 
   /*
   Vue.component("view-controls", {
@@ -195,12 +211,20 @@
   </span>
   <div class="group-seperator" data-v-if="!viewControlsOnly" />
   <i
+    on:click={undo}
+    on:keypress={() => {}}
+    role="button"
+    tabindex="0"
     data-v-if="!viewControlsOnly"
     data-click="undo"
     class="fas fa-reply"
     title="undo (ctrl + z)"
   />
   <i
+    on:click={redo}
+    on:keypress={() => {}}
+    role="button"
+    tabindex="0"
     data-v-if="!viewControlsOnly"
     data-click="redo"
     class="fas fa-share"
@@ -222,25 +246,41 @@
     </div>
   </i>
   <i
+    on:click={zoomOut}
+    on:keypress={() => {}}
+    role="button"
+    tabindex="0"
     data-click="zoomOut"
     class="fas fa-search-minus"
-    title="zoom out (mousewheel up)"
-  />
+    title="zoom out (mousewheel up)">-</i
+  >
   <i
+    on:click={zoomIn}
+    on:keypress={() => {}}
+    role="button"
+    tabindex="0"
     data-click="zoomIn"
     class="fas fa-search-plus"
-    title="zoom in (mousewheel down)"
-  />
+    title="zoom in (mousewheel down)">+</i
+  >
   <i
+    on:click={undo}
+    on:keypress={() => {}}
+    role="button"
+    tabindex="0"
     data-click="rotateLeft"
     class="fas fa-undo-alt"
-    title="rotate view left (Q)"
-  />
+    title="rotate view left (Q)">↺</i
+  >
   <i
+    on:click={redo}
+    on:keypress={() => {}}
+    role="button"
+    tabindex="0"
     data-click="rotateRight"
     class="fas fa-redo-alt"
-    title="rotate view right (E)"
-  />
+    title="rotate view right (E)">↻</i
+  >
   <span
     class="text"
     data-click="toggleTopDown"

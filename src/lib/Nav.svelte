@@ -70,7 +70,11 @@
     position: sticky;
     top: 0;
 
+    margin: 1rem;
     border-radius: 22px;
+
+    /* margin: 0 1rem 1rem 0;
+    border-radius: 0 0 22px 0; */
   }
 
   .navbar {

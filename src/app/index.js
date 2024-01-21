@@ -10,6 +10,12 @@ import httpClient from "./tools/http-client";
 import UserSettings from "./common/user-settings";
 import AccountData from "./user/account-data";
 import EventEmitter from "./tools/event-emitter";
+import { setContext } from "svelte";
+import { State } from "./state/state";
+import ObjectRegistry from "./obj/object-registry";
+import ObjectCreator from "./obj/object-creator";
+import ObjectFinder from "./obj/object-finder";
+import InteractionMode from "./tools/interaction-mode";
 
 /**
  * @typedef {import("./types").App} AppType
@@ -35,28 +41,32 @@ class App {
     this.accountData = new AccountData(null);
     this.eventHub = new EventEmitter();
     this.canvas = new Canvas(element, this);
-    // this.objects = new ObjectRegistry(this.canvas);
-    // this.state = new State(this);
-    // this.objectCreator = new ObjectCreator(this);
-    // this.interactionMode = new InteractionMode(this.canvas);
-    // this.objectFinder = new ObjectFinder(this);
+    this.objects = new ObjectRegistry(this.canvas);
+    this.state = new State(this);
+    this.objectCreator = new ObjectCreator(this);
+    this.interactionMode = new InteractionMode(this.canvas);
+    this.objectFinder = new ObjectFinder(this);
     this.isEmbed = true;
     this.isLiveEmbed = tools.getQueryParam("live") === "true";
     this.accountData.set({
       isFreeAccount: false,
       isPayingUser: true,
     });
+
+    this.$refs = {
+      viewControls: {},
+    }; // TODO: move away from vue
   }
 
   async init() {
     this.docId = tools.getQueryParam("id") || "demo-data";
     // if !docID => trigger fullscreenOverlay.showError("No ID specified", "GET parameter id not found in URL"), maybe from a store
     if (this.isLiveEmbed) {
-      this.url = `embed/get-live-embed?id=${
+      this.url = `embed-static/get-live-embed.json?id=${
         this.docId
       }&key=${tools.getQueryParam("key")}`;
     } else {
-      this.url = "embed/get?id=" + this.docId;
+      this.url = "embed-static/get.json?id=" + this.docId;
     }
 
     const res = await this.$http.get(this.url);
@@ -86,8 +96,8 @@ class App {
     }
     this.userSettings.setAll(settings);
     // titleStore.set(" - Diagram Embed")
-    // this.state.persistence.setContents(0, res.content);
-    // this.$refs.viewControls.isDashboardMode = true; // make this a store
+    this.state.persistence.setContents(0, res.content);
+    this.$refs.viewControls.isDashboardMode = true; // make this a store
     // this.$emit("init");
     // this.$emit("userDataChange");
     this.eventHub.emit("init");
