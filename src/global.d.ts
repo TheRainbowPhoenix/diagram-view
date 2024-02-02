@@ -3,6 +3,7 @@ declare global {
     canvas: any; // TODO !!
     abortLaunch?: boolean;
     Pusher: any;
+    ga: any;
   }
   interface Screen {
     deviceXDPI?: number;

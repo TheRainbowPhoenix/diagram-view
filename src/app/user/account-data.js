@@ -40,7 +40,7 @@ export default class AccountData extends EventEmitter {
     return new Date(date).toLocaleString();
   }
   load(callback) {
-    this.httpClient.get("account/get-user-data").then((res) => {
+    this.httpClient.get("account/get-user-data.json").then((res) => {
       this.isReady = true;
       this.set(res.body);
       callback();

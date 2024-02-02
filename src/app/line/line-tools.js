@@ -8,15 +8,14 @@ export const toAnchorPoint = function (anchorPoint) {
     return anchorPoint;
   } else if (anchorPoint.type === C.ANCHOR_TYPES.OBJECT) {
     const obj = window.canvas.app.objects.getById(anchorPoint.id);
-    if (!obj) {
+    if (!obj || !obj.anchorPoint || !obj.anchorPoints.anchors) {
       return {
         x: anchorPoint.x || 0,
         y: anchorPoint.y || 0,
         type: C.ANCHOR_TYPES.STANDALONE,
       };
     }
-    return window.canvas.app.objects.getById(anchorPoint.id).anchorPoints
-      .anchors[anchorPoint.index];
+    return obj.anchorPoints.anchors[anchorPoint.index];
   } else {
     return anchorPoint;
   }

@@ -5,6 +5,57 @@ import C from "../constants";
 import Rectangle from "../geometry/rectangle";
 import * as objectData from "./object-data";
 
+const loader = new THREE.ObjectLoader();
+
+const TEST_MODEL_REMOVE_ME = {
+  metadata: { version: 4.6, type: "Object", generator: "Object3D.toJSON" },
+  geometries: [
+    {
+      uuid: "CubeGeometryUUID",
+      type: "BufferGeometry",
+      data: {
+        attributes: {
+          position: {
+            itemSize: 3,
+            type: "Float32Array",
+            array: [
+              -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1,
+              // back
+              1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, -1,
+              // left
+              -1, -1, -1, -1, -1, 1, -1, 1, -1, -1, 1, -1, -1, -1, 1, -1, 1, 1,
+              // right
+              1, -1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, -1,
+              // top
+              1, 1, -1, -1, 1, -1, 1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1,
+              // bottom
+              1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, -1,
+            ],
+            normalized: false,
+          },
+        },
+        groups: [{ start: 0, materialIndex: 0, count: 8 }],
+      },
+    },
+  ],
+  materials: [
+    {
+      uuid: "DefaultMaterialUUID",
+      type: "MeshPhongMaterial",
+      name: "default",
+      color: 16777215,
+    },
+  ],
+  object: {
+    uuid: "CubeObjectUUID",
+    type: "Mesh",
+    layers: 1,
+    matrix: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    geometry: "CubeGeometryUUID",
+    material: ["DefaultMaterialUUID"],
+  },
+};
+
 export default class BaseObject {
   constructor(config, canvas, state) {
     this.config = config;
@@ -18,8 +69,14 @@ export default class BaseObject {
     this.isHovered = false;
     this.metricsPlane = null;
     this.boundingBox = new Rectangle();
+
+    // TODO: this is legacy format, please migrate to new
     this.model = objectData.getModel(config.model);
-    this.geometry = loader.parse(this.model).geometry;
+    // this.geometry = loader.parse(this.model)?.geometry || [];
+    this.geometry = new THREE.BoxGeometry(1, 1, 1);
+
+    this.object = loader.parse(TEST_MODEL_REMOVE_ME);
+
     this.backgroundMaterial = new THREE.MeshPhongMaterial({
       color: parseInt(config.backgroundColor, 16),
     });
@@ -37,11 +94,13 @@ export default class BaseObject {
       });
       materials.push(this.secondaryColorMaterial);
     }
-    this.paintFaces();
-    this.mesh = new THREE.Mesh(this.geometry, materials);
+    // this.paintFaces();
+    this.mesh = new THREE.Mesh(this.geometry, this.backgroundMaterial);
+
     this.mesh.material.polygonOffset = true;
     this.mesh.material.polygonOffsetFactor = 1;
     this.mesh.material.polygonOffsetUnits = 1;
+
     this.edges = new THREE.EdgesGeometry(this.geometry);
     this.edgeLines = new THREE.LineSegments(
       this.edges,
@@ -55,12 +114,13 @@ export default class BaseObject {
     this.group = new THREE.Group();
     this.group.add(this.mesh);
     this.group.add(this.edgeLines);
-    if (!this.model.disableImagePlane) {
-      this.createLogoPlane(state.data);
-    }
-    this.mesh.arcObject = this;
-    this.group.arcObject = this;
-    this.anchorPoints = new ObjectAnchorPoints(this.canvas, this);
+    // this.group.add(this.object);
+    // if (!this.model.disableImagePlane) {
+    //   this.createLogoPlane(state.data);
+    // }
+    // this.mesh.arcObject = this;
+    // this.group.arcObject = this;
+    // this.anchorPoints = new ObjectAnchorPoints(this.canvas, this);
     if (state.data && state.data.position) {
       this.applyState();
     } else {
@@ -70,8 +130,8 @@ export default class BaseObject {
       });
     }
     this.canvas.app.state.on(this.id + "-update", this.applyState, this);
-    this.canvas.layerManager.on("change", this.applyLayerSettings, this);
-    this.applyLayerSettings();
+    // this.canvas.layerManager.on("change", this.applyLayerSettings, this);
+    // this.applyLayerSettings();
   }
   delete() {
     this.canvas.linePlane.deleteAnchorPointsForObjectId(this.id);
@@ -85,8 +145,8 @@ export default class BaseObject {
     return this.group;
   }
   applyLayerSettings() {
-    const layer = this.canvas.layerManager.getLayerForObject(this.id);
-    this.setVisible(layer.visible);
+    // const layer = this.canvas.layerManager.getLayerForObject(this.id);
+    // this.setVisible(layer.visible);
   }
   setVisible(isVisible) {
     this.mesh.visible = isVisible;
@@ -180,7 +240,7 @@ export default class BaseObject {
     const state = this.canvas.app.state.getStateForId(this.id);
     this.setPositionOnGrid(state.position);
     this.group.rotation.y = state.rotation;
-    this.anchorPoints.refresh();
+    // this.anchorPoints.refresh();
     if (
       state.backgroundColor &&
       this.backgroundMaterial.color.getHexString() !== state.backgroundColor
@@ -201,9 +261,9 @@ export default class BaseObject {
       this.logoPlane.setIcon(state.icon, state.iconColor);
     }
     if (state.showMetrics) {
-      if (!this.metricsPlane) {
-        this.metricsPlane = new MetricsPlane(this.canvas, state.metricValue);
-      }
+      // if (!this.metricsPlane) {
+      //   this.metricsPlane = new MetricsPlane(this.canvas, state.metricValue);
+      // }
       this.group.add(this.metricsPlane.getThreeObject());
     } else if (this.metricsPlane) {
       this.group.remove(this.metricsPlane.getThreeObject());
@@ -214,9 +274,9 @@ export default class BaseObject {
     if (state.showMetaData) {
       this.canvas.pixelPlane.plane.scheduleRender();
     }
-    if (!isNaN(state.opacity)) {
-      this.setOpacity(state.opacity);
-    }
+    // if (!isNaN(state.opacity)) {
+    //   this.setOpacity(state.opacity);
+    // }
     this.canvas.pixelPlane.plane.scheduleRender();
     this.canvas.interactionPlane.plane.scheduleRender();
   }
@@ -232,7 +292,7 @@ export default class BaseObject {
     }
   }
   hideSelected() {
-    this.isHoverable = !this.isLocked;
+    // this.isHoverable = !this.isLocked;
     this.isSelected = false;
     this.canvas.app.$refs.contextOverlay.hide();
   }
@@ -271,7 +331,7 @@ export default class BaseObject {
   }
   destroy() {
     this.canvas.scene.remove(this.group);
-    this.geometry.dispose();
+    // this.geometry.dispose();
     this.backgroundMaterial.dispose();
     this.primaryColorMaterial.dispose();
     if (this.logoPlane) {
@@ -279,7 +339,7 @@ export default class BaseObject {
       this.logoPlane = null;
     }
     this.canvas.app.state.off(this.id + "-update", this.applyState, this);
-    this.canvas.layerManager.off("change", this.applyLayerSettings, this);
+    // this.canvas.layerManager.off("change", this.applyLayerSettings, this);
     this.config = null;
     this.canvas = null;
     this.geometry = null;

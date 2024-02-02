@@ -43,11 +43,21 @@ export class Canvas {
     this.selectionManager = new SelectionManager(this);
     // TODO ...
     this.animations = [];
-    // TODO ...
+    this.directionalLight = new THREE.DirectionalLight(16777215, 1);
+    this.directionalLight.position.set(50, 50, 30);
+    this.scene.add(this.directionalLight);
+    this.directionalLight = new THREE.DirectionalLight(16777215, 1);
+    this.directionalLight.position.set(-50, 50, -30);
+    this.scene.add(this.directionalLight);
+    this.ambientLight = new THREE.AmbientLight(16777215, 0.5);
+    this.scene.add(this.ambientLight);
+
     this.renderFn = this.render.bind(this);
     this.render(); // TODO: don't lock it in loop !!
     window.canvas = this;
     window.addEventListener("resize", this.onResize.bind(this), false);
+
+    this.scene.background = new THREE.Color(0x1c1c22);
   }
 
   animate(fn, frames) {

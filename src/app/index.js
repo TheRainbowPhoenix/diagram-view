@@ -10,7 +10,7 @@ import httpClient from "./tools/http-client";
 import UserSettings from "./common/user-settings";
 import AccountData from "./user/account-data";
 import EventEmitter from "./tools/event-emitter";
-import { setContext } from "svelte";
+import { createEventDispatcher, setContext } from "svelte";
 import { State } from "./state/state";
 import ObjectRegistry from "./obj/object-registry";
 import ObjectCreator from "./obj/object-creator";
@@ -30,15 +30,17 @@ class App {
    * @param {HTMLElement} element root to attach canvas to
    */
   constructor(element) {
+    this._root = element;
     this.data = {
       view: C.VIEWS.ADD,
       hideViewControls: tools.getQueryParam("hideViewControls") == "1",
     };
     this.$http = httpClient;
+    this.$emit = this.createEmit();
 
     this.errorReporter = new ErrorReporter(this.$http, this);
     this.userSettings = new UserSettings();
-    this.accountData = new AccountData(null);
+    this.accountData = new AccountData(this.$http);
     this.eventHub = new EventEmitter();
     this.canvas = new Canvas(element, this);
     this.objects = new ObjectRegistry(this.canvas);
@@ -56,6 +58,13 @@ class App {
     this.$refs = {
       viewControls: {},
     }; // TODO: move away from vue
+  }
+
+  createEmit() {
+    return (name, details = {}) => {
+      const event = new CustomEvent(name, details);
+      this._root.dispatchEvent(event);
+    };
   }
 
   async init() {
@@ -94,13 +103,63 @@ class App {
       settings.cameraIsTopDown = cameraSettings.cameraIsTopDown;
       settings.cameraEuler = cameraSettings.cameraEuler;
     }
+
+    this.state.setState(res.content || {});
+    this.state.meta.setDocMeta({
+      id: res.id,
+      created: new Date(res.created),
+      updated: new Date(res.updated),
+      liveEmbedEnabled: res.live_embed_enabled,
+      liveEmbedKey: res.live_embed_key,
+      guestUserCount: res.guest_user_count,
+    });
+
+    var userDataReady = false;
+    var userSettingsReady = false;
+    var isInitialised = false;
+
     this.userSettings.setAll(settings);
     // titleStore.set(" - Diagram Embed")
     this.state.persistence.setContents(0, res.content);
     this.$refs.viewControls.isDashboardMode = true; // make this a store
-    // this.$emit("init");
-    // this.$emit("userDataChange");
+    this.$emit("init");
+    this.$emit("userDataChange");
     this.eventHub.emit("init");
+
+    // function checkInit() {
+    //   if (!userDataReady || !userSettingsReady) {
+    //     return;
+    //   }
+    //   if (isInitialised) {
+    //     return;
+    //   }
+    //   isInitialised = true;
+    //   this.$emit("init");
+    //   this.$emit("userDataChange");
+    //   this.eventHub.emit("init");
+    //   if (this.userSettings.get("showTipOfDay")) {
+    //     this.$refs.fullscreenOverlay.showTipOfDay();
+    //   }
+    // }
+
+    // this.accountData.load(() => {
+    //   if (window.ga) {
+    //     window.ga("set", "userId", this.accountData.get("userId"));
+    //     window.ga("create", {
+    //       trackingId: "UA-00000001-1",
+    //       cookieDomain: "auto",
+    //       userId: this.accountData.get("userId"),
+    //       name: "app",
+    //     });
+    //   }
+    //   userDataReady = true;
+    //   checkInit();
+    // });
+
+    // this.userSettings.on("ready", () => {
+    //   userSettingsReady = true;
+    //   checkInit();
+    // });
 
     return this;
   }

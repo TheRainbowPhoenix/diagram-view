@@ -1,0 +1,11 @@
+{
+  "userId": "171754ea-9997-438d-a88e-6e54d8bef87f",
+  "orgId": "120f7d4e-18c1-4eb4-b54c-e146705b372f",
+  "firstname": "ADMIN",
+  "lastname": "ADMIN",
+  "email": "admin@example.com",
+  "isPayingUser": true,
+  "isFreeAccount": false,
+  "paymentPlan": "paid",
+  "apiKey": "16841ea10211cad8c5dfeb6e8a674c4571559129a103368aedea86cb621291b4"
+}
