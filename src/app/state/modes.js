@@ -2,6 +2,12 @@ import C from "../constants";
 
 const modes = {};
 
+modes[C.INTERACTION_MODE.SELECT] = {
+  name: C.INTERACTION_MODE.SELECT,
+  start: (canvas, data) => {},
+  stop: (canvas) => {},
+};
+
 modes[C.INTERACTION_MODE.PLACE_COMPONENT] = {
   name: C.INTERACTION_MODE.PLACE_COMPONENT,
   start: (canvas, data) => {

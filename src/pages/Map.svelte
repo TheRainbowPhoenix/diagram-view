@@ -56,6 +56,7 @@
 
     const scene = new THREE.Scene();
 
+    // WebGPURenderer ??
     renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
@@ -64,6 +65,7 @@
 
     renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
     wrapper.appendChild(renderer.domElement);
 
     // camera
@@ -108,6 +110,8 @@
     // Animate
     const clock = new THREE.Clock();
     let lastElapsedTime = 0;
+
+    wrapper.focus();
 
     const tick = () => {
       const elapsedTime = clock.getElapsedTime();

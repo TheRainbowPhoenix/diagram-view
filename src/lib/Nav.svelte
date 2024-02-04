@@ -7,10 +7,12 @@
   export let visible = false;
 
   import { routes } from "../router/routes";
+  import MainMenu from "./MainMenu.svelte";
+  import AppIcon from "./icons/AppIcon.svelte";
 </script>
 
 <nav aria-label="Main">
-  <div class="navbar">
+  <!-- <div class="navbar">
     <div class="items">
       <div class="toggle-wrapper">
         <label>
@@ -45,7 +47,7 @@
         </div>
       {/if}
     </div>
-  </div>
+  </div> -->
 </nav>
 
 <style>
@@ -56,26 +58,28 @@
 
   nav {
     display: flex;
-    height: 56px;
+    /* height: 56px; */
 
     padding: 0;
     backdrop-filter: blur(12px);
     /* border-style: solid; */
     /* border-width: 0 0 1px; */
     /* border-color: rgb(48, 48, 48); */
-    z-index: 400;
+    z-index: 40;
 
-    background-color: rgba(48, 48, 48, 0.4);
+    /* background-color: rgba(48, 48, 48, 0.4); */
 
     position: sticky;
     top: 0;
 
-    margin: 1rem;
-    border-radius: 22px;
+    /* margin: 1rem; */
+    /* border-radius: 22px; */
 
     /* margin: 0 1rem 1rem 0;
     border-radius: 0 0 22px 0; */
   }
+
+  /* Old menu */
 
   .navbar {
     /* max-width: 1419px; */

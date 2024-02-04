@@ -30,7 +30,7 @@ export default class InteractionMode extends EventEmitter {
   }
   getActiveMode() {
     if (this.activeMode === null) {
-      return CONSTANTS.INTERACTION_MODE.PAN_ON_DRAG; // SELECT
+      return CONSTANTS.INTERACTION_MODE.SELECT; // SELECT
     } else {
       return this.activeMode.name;
     }

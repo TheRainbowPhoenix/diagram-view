@@ -5,11 +5,19 @@
   import { mount } from "../app";
   import ViewControls from "../app/ui/view-controls/ViewControls.svelte";
   import BaseViewControls from "../app/ui/view-controls/BaseViewControls.svelte";
+  import { explorerVisible, toolbarVisible } from "../lib/states/ui";
+  import Toolbar from "../app/ui/Toolbar.svelte";
+  import TitleBar from "../lib/TitleBar.svelte";
+  import {
+    appThemeName,
+    appThemeClass,
+    appThemeColors,
+  } from "../lib/states/themes";
 
   /** @type {HTMLCanvasElement} */
   let canvas;
 
-  /** @type {HTMLDivElement} */
+  /** @type {HTMLButtonElement} */
   let root;
 
   /** @type {import('../app/types').App} */
@@ -24,23 +32,29 @@
 
   let loading = true;
 
-  let sidebarVisible = false;
-  let toolbarVisible = false;
   let repaintFlag = false;
+
+  explorerVisible.subscribe((v) => {
+    repaintFlag = true;
+  });
+
+  toolbarVisible.subscribe((v) => {
+    repaintFlag = true;
+  });
 
   setContext("root", {
     app: () => app,
   });
 
   const toggleSB = () => {
-    sidebarVisible = !sidebarVisible;
-    repaintFlag = true;
+    explorerVisible.update((v) => !v);
+    // repaintFlag = true;
   };
 
-  const toggleTB = () => {
-    toolbarVisible = !toolbarVisible;
-    repaintFlag = true;
-  };
+  // const toggleTB = () => {
+  //   toolbarVisible.update((v) => !v);
+  //   repaintFlag = true;
+  // };
 
   afterUpdate(() => {
     if (repaintFlag) {
@@ -94,37 +108,88 @@
       app.destroy();
     }
   });
+
+  let htmlStyle = "";
+
+  appThemeColors.subscribe((c) => {
+    const colorVars = Object.entries(c).map(
+      ([key, value]) => `--${key}: ${value};`
+    );
+    htmlStyle = `<style>:root { ${colorVars.join("  ")} }</style>`;
+  });
 </script>
 
-<div class="app-wrapper">
-  <div class="toolbar" class:visible={toolbarVisible}>
-    <p>TODO</p>
-  </div>
-  <div class="main-space">
-    <div id="root" bind:this={root} class:sidebarVisible class:toolbarVisible>
-      {#if loading}
-        <p>Loading ...</p>
-        <div id="loading-overlay"></div>
-      {/if}
-      <!-- <canvas id="map" bind:this={canvas} /> -->
+<div class="theme-root">
+  {@html htmlStyle}
+
+  <TitleBar />
+
+  <div class="app-wrapper">
+    <div class="left-taskbar" class:visible={$toolbarVisible}>
+      <Toolbar />
     </div>
-    {#if !loading}
-      <ViewControls />
-    {/if}
-    <button class="SB" on:click={toggleSB}>SB</button>
-    <button class="TB" on:click={toggleTB}>TB</button>
-  </div>
-  <div class="sidebar" class:visible={sidebarVisible}>
-    <p style="margin: 1rem;">TODO</p>
+    <div class="main-space">
+      <button
+        on:click|preventDefault={() => {
+          root.focus();
+        }}
+        id="root"
+        tabindex="0"
+        bind:this={root}
+        class:sidebarVisible={$explorerVisible}
+        class:toolbarVisible={$toolbarVisible}
+      >
+        {#if loading}
+          <p>Loading ...</p>
+          <div id="loading-overlay"></div>
+        {/if}
+        <!-- <canvas id="map" bind:this={canvas} /> -->
+      </button>
+      {#if !loading}
+        <ViewControls />
+      {/if}
+      <button class="SB" on:click={toggleSB}>SB</button>
+      <!-- <button class="TB" on:click={toggleTB}>TB</button> -->
+    </div>
+    <div class="sidebar" class:visible={$explorerVisible}>
+      <p style="margin: 1rem;">Explorer</p>
+    </div>
   </div>
 </div>
 
 <style>
+  .theme-root {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+  }
+  button:hover {
+    border-color: #646cff;
+  } */
+
   #root {
+    position: absolute;
+    inset: 0;
     overflow: hidden;
     /* border-radius: 22px 22px 0 0; */
     height: 100%;
     width: 100%;
+    outline: transparent;
+    cursor: initial !important;
+    background-color: var(--grid-bg);
   }
 
   #root.sidebarVisible {
@@ -164,8 +229,8 @@
   .sidebar.visible {
     visibility: visible;
     flex: 0 0 250px;
-    margin: 0 1rem;
-    background-color: #131416;
+    margin: 0 0.5rem;
+    background-color: var(--bg-raised);
     transition: background-color 0.2s ease-in-out;
   }
 
@@ -175,27 +240,40 @@
     left: 11px;
   }
 
-  .toolbar {
+  .left-taskbar {
+    position: relative;
+    display: flex;
     visibility: hidden;
     overflow: hidden;
     flex: 0 0 0px;
   }
 
-  .toolbar.visible {
+  .left-taskbar.visible {
     visibility: visible;
-    flex: 0 0 48px;
-    margin: 0 1rem;
+    flex: 0 0 32px;
+
+    padding: 8px;
   }
-  /* 
-  canvas {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    min-width: 800px;
-    min-height: 600px;
-    mix-blend-mode: color-dodge;
-    background: var(--noise);
-    background-size: 140px, 100%, cover;
-    background-blend-mode: exclusion;
-    background-position: 0% 100%;
-    background-color: dimgray;
-  } */
+
+  .left-taskbar.visible ~ .main-space #root:focus::before {
+    content: "";
+    margin-top: 22px;
+    position: absolute;
+    z-index: 10;
+    width: 1.5px;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0px;
+    --bg-color: rgba(255, 255, 255, 0.05);
+    background-image: linear-gradient(
+      45deg,
+      transparent 0%,
+      var(--bg-color) 40%,
+      var(--bg-color) 90%,
+      transparent 100%,
+      transparent
+    );
+    backdrop-filter: blur(12px);
+  }
 </style>

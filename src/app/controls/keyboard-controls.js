@@ -12,10 +12,26 @@ export default class KeyboardControls extends EventEmitter {
     document.addEventListener("keydown", this.onKeyDown.bind(this));
     document.addEventListener("keyup", this.onKeyUp.bind(this));
   }
+  isValidSource(e) {
+    // console.log(e.target);
+    return (
+      !["menu", "menuitem"].includes(
+        e.target.role
+      ) /* document.activeElement.tagName === "BODY" || */ &&
+      document.activeElement.id === "root"
+    );
+  }
   onKeyDown(e) {
+    if (!this.isValidSource(e)) {
+      this.pressedKeys = {};
+      this.updatePressedKeys(e);
+      return;
+    }
+
     if (this.isInputEvent(e)) {
       return;
     }
+
     if (this.pressedKeys[e.keyCode] === true) {
       return;
     }
@@ -32,6 +48,12 @@ export default class KeyboardControls extends EventEmitter {
     }
   }
   onKeyUp(e) {
+    if (!this.isValidSource(e)) {
+      this.pressedKeys = {};
+      this.updatePressedKeys(e);
+      return;
+    }
+
     if (this.isInputEvent(e)) {
       return;
     }
@@ -49,7 +71,8 @@ export default class KeyboardControls extends EventEmitter {
   }
   isInputEvent(event) {
     return (
-      (event.target.nodeName === "INPUT" ||
+      (event.target.nodeName === "A" ||
+        event.target.nodeName === "INPUT" ||
         event.target.nodeName === "TEXTAREA") &&
       event.keyCode !== KEYS.ESC
     );

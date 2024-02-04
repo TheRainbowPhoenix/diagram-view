@@ -1,4 +1,8 @@
-# Diagrams View
+# Whirlwind
+
+Something Something 3D webapp
+
+Just me leaning ThreeJS and building yet another web-based UI
 
 ![screenshot of current WIP](docs/app_empty.png)
 

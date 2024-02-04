@@ -2,10 +2,7 @@
   import { getContext, onMount } from "svelte";
   import type { App } from "../../types";
   import CONSTANTS from "../../constants";
-
-  interface AppCtx {
-    app: () => App;
-  }
+  import type { AppCtx } from "../../../lib/states/app";
 
   const appCtx: AppCtx = getContext("root");
 
@@ -302,6 +299,13 @@
     transition: all 400ms ease;
   }
 
+  button {
+    border-radius: 8px;
+    padding: 0.6em 1.2em;
+    cursor: pointer;
+    transition: border-color 0.25s;
+  }
+
   button:hover .ico-solid {
     fill: var(--accent);
     box-shadow: 0 0 3px var(--accent);
@@ -322,7 +326,8 @@
     outline: 0;
   }
 
-  .toolbar button:hover {
+  .toolbar button:hover,
+  .toolbar button:focus {
     background-color: rgba(255, 255, 255, 0.03);
     transition: all 400ms ease;
   }

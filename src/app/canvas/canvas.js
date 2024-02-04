@@ -58,6 +58,8 @@ export class Canvas {
     window.addEventListener("resize", this.onResize.bind(this), false);
 
     this.scene.background = new THREE.Color(0x1c1c22);
+
+    this.element.focus();
   }
 
   animate(fn, frames) {

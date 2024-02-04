@@ -1,0 +1,11 @@
+{
+  "menu.file": "File",
+  "menu.file.new": "New File...",
+  "menu.file.newWindow": "New Window",
+  "menu.file.selectTheme": "Select theme",
+  "menu.file.selectLang": "Select lang",
+  "menu.file.quit": "Quit WhirlWind",
+  "menu.edit": "Edit",
+  "menu.view": "View",
+  "menu.help": "Help"
+}

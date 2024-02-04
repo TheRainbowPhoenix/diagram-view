@@ -1,0 +1,11 @@
+{
+  "menu.file": "Fichier",
+  "menu.file.new": "Nouveau...",
+  "menu.file.newWindow": "Nouvelle fenêtre",
+  "menu.file.selectTheme": "Thème",
+  "menu.file.selectLang": "Langue",
+  "menu.file.quit": "Quitter WhirlWind",
+  "menu.edit": "Edition",
+  "menu.view": "Vue",
+  "menu.help": "Aide"
+}
