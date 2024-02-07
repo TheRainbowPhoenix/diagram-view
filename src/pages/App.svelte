@@ -13,6 +13,7 @@
     appThemeClass,
     appThemeColors,
   } from "../lib/states/themes";
+  import HudToolbar from "../app/ui/view-controls/HUDToolbar.svelte";
 
   /** @type {HTMLCanvasElement} */
   let canvas;
@@ -146,7 +147,8 @@
         <!-- <canvas id="map" bind:this={canvas} /> -->
       </button>
       {#if !loading}
-        <ViewControls />
+        <HudToolbar />
+        <!-- <ViewControls /> -->
       {/if}
       <button class="SB" on:click={toggleSB}>SB</button>
       <!-- <button class="TB" on:click={toggleTB}>TB</button> -->

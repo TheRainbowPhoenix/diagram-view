@@ -10,6 +10,7 @@ export const availableThemes = [
       "accent-semi": "#7c62fe",
       "accent-check": "#8871f9",
       bg: "#101012",
+      "bg-darker": "#060608",
       "bg-raised": "#131416",
 
       interact: "#1c1c20",
@@ -17,6 +18,7 @@ export const availableThemes = [
       "text-main": "rgba(255, 255, 255, 0.87)",
       "text-second": "#c4c4c4",
       "text-disabled": "rgba(255, 255, 255, 0.4)",
+      border: "rgba(255, 255, 255, 0.3)",
 
       "grid-bg": "#181a1c",
       "grid-line": "#202024",
@@ -30,6 +32,7 @@ export const availableThemes = [
       "accent-semi": "#4da1f6",
       "accent-check": "#0066ac",
       bg: "#f5f5f5",
+      "bg-darker": "#f0f0f0",
       "bg-raised": "#ffffff",
 
       interact: "#e2e2e2",
@@ -37,6 +40,7 @@ export const availableThemes = [
       "text-main": "#333333",
       "text-second": "#666666",
       "text-disabled": "rgba(0, 0, 0, 0.4)",
+      border: "rgba(0, 0, 0, 0.3)",
 
       "grid-bg": "#eaeaea",
       "grid-line": "#d4d4d4",
