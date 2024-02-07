@@ -10,8 +10,6 @@
   import ZoomScale from "../../../lib/icons/ZoomScale.svelte";
   import ZoomOut from "../../../lib/icons/ZoomOut.svelte";
 
-  import type { App } from "../../types";
-  import CONSTANTS from "../../constants";
   import type { AppCtx } from "../../../lib/states/app";
 
   const appCtx: AppCtx = getContext("root");

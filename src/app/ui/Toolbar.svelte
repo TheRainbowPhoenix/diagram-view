@@ -1,5 +1,28 @@
-<div class="toolbar">
-  <div class="toolbar-tool">
+<script lang="ts">
+  import { createToolbar, melt } from "@melt-ui/svelte";
+
+  const {
+    elements: { root, button, link, separator },
+    builders: { createToolbarGroup },
+  } = createToolbar({
+    orientation: "vertical",
+  });
+
+  const {
+    elements: { group: toolsGroup, item: toolsItem },
+  } = createToolbarGroup();
+
+  const {
+    elements: { group: metaGroup, item: metaItem },
+  } = createToolbarGroup();
+
+  const {
+    elements: { group: editGroup, item: editItem },
+  } = createToolbarGroup();
+</script>
+
+<div class="toolbar" use:melt={$root}>
+  <button class="toolbar-tool" use:melt={$button} tabindex="0">
     <svg
       role="img"
       fill="currentColor"
@@ -21,9 +44,9 @@
         opacity=".5"
       /></svg
     >
-  </div>
+  </button>
 
-  <div class="toolbar-tool">
+  <button class="toolbar-tool" use:melt={$button}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1.5em"
@@ -43,9 +66,9 @@
         opacity=".5"
       /></svg
     >
-  </div>
+  </button>
 
-  <div class="toolbar-tool">
+  <button class="toolbar-tool" use:melt={$button}>
     <svg
       role="img"
       fill="currentColor"
@@ -67,9 +90,9 @@
         opacity=".5"
       /></svg
     >
-  </div>
+  </button>
 
-  <div class="toolbar-tool">
+  <button class="toolbar-tool" use:melt={$button}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1.5em"
@@ -91,11 +114,11 @@
         d="M15.814 14H17.9c1.4 0 2.1 0 2.635.273a2.5 2.5 0 0 1 1.093 1.092C21.9 15.9 21.9 16.6 21.9 18c0 1.4 0 2.1-.272 2.635a2.5 2.5 0 0 1-1.093 1.092C20 22 19.3 22 17.9 22H6c.917 0 1.534 0 2-.077v.003l.003-.003c.245-.04.448-.102.632-.195a2.5 2.5 0 0 0 1.093-1.093c.093-.184.155-.387.195-.632l3.299-3.299z"
       /></svg
     >
-  </div>
+  </button>
 
-  <div class="separator" />
+  <div class="separator" use:melt={$separator} />
 
-  <div class="toolbar-tool">
+  <button class="toolbar-tool" use:melt={$button}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1.5em"
@@ -112,9 +135,9 @@
         d="M12 8.25a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5"
       /></svg
     >
-  </div>
+  </button>
 
-  <div class="toolbar-tool">
+  <button class="toolbar-tool" use:melt={$button}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1.5em"
@@ -131,9 +154,9 @@
         opacity=".5"
       /></svg
     >
-  </div>
+  </button>
 
-  <div class="toolbar-tool">
+  <button class="toolbar-tool" use:melt={$button}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1.5em"
@@ -152,11 +175,11 @@
         opacity=".4"
       /></svg
     >
-  </div>
+  </button>
 
-  <div class="separator" />
+  <div class="separator" use:melt={$separator} />
 
-  <div class="toolbar-tool">
+  <button class="toolbar-tool" use:melt={$button}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1.5em"
@@ -171,9 +194,9 @@
         d="M19.643 4.358a4.445 4.445 0 0 0-6.287 0l-.038.037c.232.156.456.38.802.726l4.825 4.825c.302.302.518.517.675.72l.023-.022a4.445 4.445 0 0 0 0-6.286"
       /></svg
     >
-  </div>
+  </button>
 
-  <div class="toolbar-tool">
+  <button class="toolbar-tool" use:melt={$button}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1.5em"
@@ -192,9 +215,9 @@
         /></g
       ></svg
     >
-  </div>
+  </button>
 
-  <div class="toolbar-tool">
+  <button class="toolbar-tool" use:melt={$button}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1.5em"
@@ -213,9 +236,9 @@
         opacity=".5"
       /></svg
     >
-  </div>
+  </button>
 
-  <div class="toolbar-tool">
+  <button class="toolbar-tool" use:melt={$button}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1.5em"
@@ -230,9 +253,9 @@
         opacity=".5"
       /></svg
     >
-  </div>
+  </button>
 
-  <div class="toolbar-tool">
+  <button class="toolbar-tool" use:melt={$button}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1.5em"
@@ -247,7 +270,7 @@
         d="M10.124 7.271a2.017 2.017 0 1 1-2.853 2.852a2.017 2.017 0 0 1 2.853-2.852m8.927 4.78l-6.979 6.98a.75.75 0 1 1-1.06-1.06l6.979-6.98a.75.75 0 1 1 1.06 1.06"
       /></svg
     >
-  </div>
+  </button>
 </div>
 
 <style>
